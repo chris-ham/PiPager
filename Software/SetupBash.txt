@@ -1,0 +1,147 @@
+#!/bin/bash
+
+#Follow this guide to get started
+#https://www.raspberrypi.org/learning/software-guide/quickstart/
+#Once you have a working Pi run this script on the Pi
+#select keyboard type desired. I use {English (US}
+
+#update and upgrade the installed image
+sudo apt-get update
+sudo apt-get upgrade -y
+
+
+##set the raspberry pi up as a web server
+#https://www.raspberrypi.org/documentation/remote-access/web-server/apache.md
+sudo apt-get install apache2 apache2-utils -y
+
+#install PHP5
+sudo apt-get install libapache2-mod-php5 php5 php-pear php5-xcache -y
+
+#install PHP5 MySQL database support
+#old version sudo apt-get install php5-mysql
+sudo apt-get install php5-mysqlnd
+
+#install MySQL - set the root password during the installation
+sudo apt-get install mysql-server mysql-client -y
+
+#install phpMyAdmin
+#choose apache2
+#say yes to configure database for phpmyadmin...
+#PWD raspberry
+#PWD raspberry
+sudo apt-get install phpmyadmin -y
+
+#edit apache to include php my admin
+sudo nano /etc/apache2/apache2.conf
+#add Include /etc/phpmyadmin/apache.conf to the bottom of the file
+
+sudo nano /ect/php5/apache2/php.ini
+#add extension = mysqli.so to php.ini under ; Dynamic Extensions ;
+
+
+#restart apache service
+sudo /etc/init.d/apache2 restart
+
+#update and upgrade the installed image
+sudo apt-get update
+sudo apt-get upgrade -y
+
+#create a login on mysql for pager on localhost
+sudo mysql --user=root mysql
+CREATE USER 'pager'@'localhost' IDENTIFIED BY 'raspberry';
+GRANT ALL PRIVILEGES ON *.* TO 'pager'@'localhost' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+#create a login on mysql for pager on all?
+#sudo mysql --user=root mysql
+#CREATE USER 'pageradmin'@'%' IDENTIFIED BY 'raspberry';
+#GRANT ALL PRIVILEGES ON *.* TO 'pager'@'localhost' WITH GRANT OPTION;
+#FLUSH PRIVILEGES;
+
+
+#allow editing of web page folders
+#https://askubuntu.com/questions/693418/use-chown-to-set-the-ownership-of-all-a-folders-subfolders-and-files
+cd /var/www/html
+sudo chmod -R 777 /var/www/html
+
+#.....PWD raspberry
+
+##remove default web page
+#cd /var/www/html
+#sudo chown pi: index.html
+#sudo rm index.html
+#create index.php
+
+
+
+
+#create mysqldb connection
+sudo apt-get install python-mysqldb -y
+
+
+
+
+#install arduino drivers etc for serial port access this allows the
+#Raspberry Pi to recognise the RPi transmitter
+sudo apt-get install arduino -y
+
+
+
+#create MySQL Database
+#you can do tis by restoring the sql image 'VEX_TM_Pager.sql'
+
+
+
+
+#***************************
+#copy files to correct locations
+#***************************
+
+
+#make Pager.sh executable
+sudo chmod 755 /home/pi/Pager.sh
+
+
+#enable remote desktop
+sudo apt-get install xrdp -y
+#this install with
+#UID pi
+#PWD raspberry
+
+
+
+#set to autorun pgm
+#***************************
+sudo nano /etc/rc.local
+
+#edit rc.local with the line below just above the 'exit 0' line
+# the & at the end forks the process allowing Pager.sh to run foever without
+#  locking up the pie
+sudo python /home/pi/Pager.sh &
+
+#reboot and good to go!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
